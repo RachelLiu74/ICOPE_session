@@ -11,6 +11,7 @@
     teamId: "",
     studentCode: "",
     startTime: null,
+    currentIndex: 0,
     ungradedAnswers: {}, // question_id -> option key
     singleAnswers: {}, // question_id -> option key
     multiAnswers: {}, // question_id -> Set of option keys
@@ -62,7 +63,10 @@
     teams.forEach((t) => {
       const opt = document.createElement("option");
       opt.value = t.id;
-      opt.textContent = t.project ? `${t.name}（${t.tag}：${t.project}）` : `${t.name}（${t.tag}）`;
+      let label = t.name;
+      if (t.tag && t.project) label = `${t.name}（${t.tag}：${t.project}）`;
+      else if (t.tag) label = `${t.name}（${t.tag}）`;
+      opt.textContent = label;
       select.appendChild(opt);
     });
   }
@@ -101,6 +105,7 @@
     state.ungradedAnswers = {};
     state.singleAnswers = {};
     state.multiAnswers = {};
+    state.currentIndex = 0;
 
     try {
       if (state.questions.length === 0) {
@@ -112,85 +117,73 @@
     }
 
     state.startTime = new Date().toISOString();
-    renderPart1();
-    showView("view-part1");
+    renderTabs();
+    renderQuestion();
+    showView("view-quiz");
   });
 
-  // ---------- Part 1: ungraded opinion-poll questions (single-select) ----------
-  function renderPart1() {
-    const container = document.getElementById("open-questions");
-    container.innerHTML = "";
-    state.ungradedQuestions.forEach((q, idx) => {
-      const block = el("div", "question-block");
-      block.appendChild(el("div", "question-label", `想法投票 ${idx + 1} / ${state.ungradedQuestions.length}`));
-      block.appendChild(el("div", "question-text", q.text));
-      const optWrap = el("div", "mc-options");
-      Object.keys(q.options).forEach((key) => {
-        const opt = el("div", "mc-opt");
-        opt.dataset.key = key;
-        opt.appendChild(el("b", null, key));
-        opt.appendChild(el("span", null, q.options[key]));
-        opt.addEventListener("click", () => {
-          state.ungradedAnswers[q.id] = key;
-          Array.from(optWrap.children).forEach((c) => c.classList.remove("selected"));
-          opt.classList.add("selected");
-        });
-        optWrap.appendChild(opt);
-      });
-      block.appendChild(optWrap);
-      container.appendChild(block);
-    });
-    document.getElementById("part1-progress").textContent = `共 ${state.ungradedQuestions.length} 題，皆可留空`;
+  // ---------- quiz: one question per tab ----------
+  const SECTION_LABELS = {
+    mc_ungraded: "想法投票",
+    mc_single: "單選題",
+    mc_multi: "複選題（可選多項）",
+  };
+
+  function getAnswer(q) {
+    if (q.type === "mc_ungraded") return state.ungradedAnswers[q.id];
+    if (q.type === "mc_single") return state.singleAnswers[q.id];
+    if (q.type === "mc_multi") return state.multiAnswers[q.id];
+    return undefined;
   }
 
-  document.getElementById("btn-to-part2").addEventListener("click", () => {
-    renderPart2();
-    showView("view-part2");
-  });
-  document.getElementById("btn-back-to-part1").addEventListener("click", () => showView("view-part1"));
+  function isAnswered(q) {
+    if (q.type === "mc_multi") {
+      const set = state.multiAnswers[q.id];
+      return !!set && set.size > 0;
+    }
+    return !!getAnswer(q);
+  }
 
-  // ---------- Part 2-3: single-select (Q6-8) + multi-select (Q9-10), scored ----------
-  function renderPart2() {
-    const container = document.getElementById("mc-questions");
-    container.innerHTML = "";
-    let qNum = state.ungradedQuestions.length;
-
-    state.singleQuestions.forEach((q) => {
-      qNum += 1;
-      const block = el("div", "question-block");
-      block.appendChild(el("div", "question-label", `單選題 · Q${qNum}`));
-      block.appendChild(el("div", "question-text", q.text));
-      const optWrap = el("div", "mc-options");
-      Object.keys(q.options).forEach((key) => {
-        const opt = el("div", "mc-opt");
-        opt.dataset.key = key;
-        opt.appendChild(el("b", null, key));
-        opt.appendChild(el("span", null, q.options[key]));
-        opt.addEventListener("click", () => {
-          state.singleAnswers[q.id] = key;
-          Array.from(optWrap.children).forEach((c) => c.classList.remove("selected"));
-          opt.classList.add("selected");
-        });
-        optWrap.appendChild(opt);
+  function renderTabs() {
+    const tabsEl = document.getElementById("quiz-tabs");
+    tabsEl.innerHTML = "";
+    state.questions.forEach((q, idx) => {
+      const tab = el("button", "quiz-tab", String(idx + 1));
+      tab.type = "button";
+      if (idx === state.currentIndex) tab.classList.add("active");
+      if (isAnswered(q)) tab.classList.add("answered");
+      tab.addEventListener("click", () => {
+        state.currentIndex = idx;
+        renderTabs();
+        renderQuestion();
       });
-      block.appendChild(optWrap);
-      container.appendChild(block);
+      tabsEl.appendChild(tab);
     });
+  }
 
-    state.multiQuestions.forEach((q) => {
-      qNum += 1;
+  function renderQuestion() {
+    const q = state.questions[state.currentIndex];
+    const total = state.questions.length;
+    document.getElementById("submit-error").textContent = "";
+    document.getElementById("quiz-section-label").textContent =
+      `${q.section} · ${SECTION_LABELS[q.type] || ""}`;
+    document.getElementById("quiz-question-text").textContent = q.text;
+    document.getElementById("quiz-progress").textContent = `第 ${state.currentIndex + 1} / ${total} 題`;
+
+    const optWrap = document.getElementById("quiz-options");
+    optWrap.innerHTML = "";
+    optWrap.className = "mc-options";
+
+    if (q.type === "mc_multi") {
       if (!state.multiAnswers[q.id]) state.multiAnswers[q.id] = new Set();
-      const block = el("div", "question-block");
-      block.appendChild(el("div", "question-label", `複選題（可選多項）· Q${qNum}`));
-      block.appendChild(el("div", "question-text", q.text));
-      const optWrap = el("div", "mc-options");
+      const set = state.multiAnswers[q.id];
       Object.keys(q.options).forEach((key) => {
         const opt = el("div", "mc-opt");
         opt.dataset.key = key;
+        if (set.has(key)) opt.classList.add("selected");
         opt.appendChild(el("b", null, key));
         opt.appendChild(el("span", null, q.options[key]));
         opt.addEventListener("click", () => {
-          const set = state.multiAnswers[q.id];
           if (set.has(key)) {
             set.delete(key);
             opt.classList.remove("selected");
@@ -198,13 +191,49 @@
             set.add(key);
             opt.classList.add("selected");
           }
+          renderTabs();
         });
         optWrap.appendChild(opt);
       });
-      block.appendChild(optWrap);
-      container.appendChild(block);
-    });
+    } else {
+      const answerMap = q.type === "mc_ungraded" ? state.ungradedAnswers : state.singleAnswers;
+      Object.keys(q.options).forEach((key) => {
+        const opt = el("div", "mc-opt");
+        opt.dataset.key = key;
+        if (answerMap[q.id] === key) opt.classList.add("selected");
+        opt.appendChild(el("b", null, key));
+        opt.appendChild(el("span", null, q.options[key]));
+        opt.addEventListener("click", () => {
+          answerMap[q.id] = key;
+          Array.from(optWrap.children).forEach((c) => c.classList.remove("selected"));
+          opt.classList.add("selected");
+          renderTabs();
+        });
+        optWrap.appendChild(opt);
+      });
+    }
+
+    const isLast = state.currentIndex === total - 1;
+    document.getElementById("btn-prev-question").disabled = state.currentIndex === 0;
+    document.getElementById("btn-next-question").style.display = isLast ? "none" : "";
+    document.getElementById("btn-submit-quiz").style.display = isLast ? "" : "none";
   }
+
+  document.getElementById("btn-prev-question").addEventListener("click", () => {
+    if (state.currentIndex > 0) {
+      state.currentIndex -= 1;
+      renderTabs();
+      renderQuestion();
+    }
+  });
+
+  document.getElementById("btn-next-question").addEventListener("click", () => {
+    if (state.currentIndex < state.questions.length - 1) {
+      state.currentIndex += 1;
+      renderTabs();
+      renderQuestion();
+    }
+  });
 
   document.getElementById("btn-submit-quiz").addEventListener("click", async () => {
     const errEl = document.getElementById("submit-error");
@@ -214,7 +243,15 @@
       (q) => !state.multiAnswers[q.id] || state.multiAnswers[q.id].size === 0
     );
     if (missingSingle.length > 0 || missingMulti.length > 0) {
-      errEl.textContent = `還有 ${missingSingle.length + missingMulti.length} 題選擇題尚未作答`;
+      const firstMissing = [...missingSingle, ...missingMulti][0];
+      const idx = state.questions.findIndex((q) => q.id === firstMissing.id);
+      if (idx >= 0) {
+        state.currentIndex = idx;
+        renderTabs();
+        renderQuestion();
+      }
+      document.getElementById("submit-error").textContent =
+        `還有 ${missingSingle.length + missingMulti.length} 題選擇題尚未作答`;
       return;
     }
     errEl.textContent = "";
@@ -360,7 +397,7 @@
     }
   }
 
-  const SECTION_LABELS = {
+  const STATS_SECTION_LABELS = {
     mc_ungraded: "想法投票",
     mc_single: "單選題",
     mc_multi: "複選題",
@@ -372,7 +409,7 @@
     questions.forEach((q, idx) => {
       const card = el("div", "qstat-card");
       const tagClass = q.type === "mc_ungraded" ? "open" : "mc";
-      const tag = el("span", `section-tag ${tagClass}`, SECTION_LABELS[q.type] || q.type);
+      const tag = el("span", `section-tag ${tagClass}`, STATS_SECTION_LABELS[q.type] || q.type);
       card.appendChild(tag);
       card.appendChild(el("h3", null, `Q${idx + 1}：${q.text}`));
 

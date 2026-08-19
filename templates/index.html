@@ -49,29 +49,19 @@
     </div>
   </section>
 
-  <!-- STUDENT: Part 1 ungraded opinion-poll questions -->
-  <section id="view-part1" class="view">
+  <!-- STUDENT: quiz (one question per tab) -->
+  <section id="view-quiz" class="view">
     <div class="card wide">
-      <div class="eyebrow">PART 1 · 想法投票（無標準答案）</div>
-      <h2>先分享你的想法</h2>
-      <div id="open-questions"></div>
-      <div class="row-buttons">
-        <span class="muted" id="part1-progress"></span>
-        <button class="btn primary" id="btn-to-part2">下一部分：選擇題 →</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- STUDENT: Part 2-3 MC questions (single + multi select, scored) -->
-  <section id="view-part2" class="view">
-    <div class="card wide">
-      <div class="eyebrow">PART 2-3 · 選擇題（會計分）</div>
-      <h2>請選出你認為最適合的答案</h2>
-      <div id="mc-questions"></div>
+      <div class="quiz-tabs" id="quiz-tabs"></div>
+      <div class="eyebrow" id="quiz-section-label"></div>
+      <h2 id="quiz-question-text"></h2>
+      <div id="quiz-options"></div>
       <p class="error" id="submit-error"></p>
       <div class="row-buttons">
-        <button class="btn ghost" id="btn-back-to-part1">← 上一部分</button>
-        <button class="btn primary" id="btn-submit-quiz">送出作答</button>
+        <button class="btn ghost" id="btn-prev-question">← 上一題</button>
+        <span class="muted" id="quiz-progress"></span>
+        <button class="btn primary" id="btn-next-question">下一題 →</button>
+        <button class="btn primary" id="btn-submit-quiz" style="display:none;">送出作答</button>
       </div>
     </div>
   </section>

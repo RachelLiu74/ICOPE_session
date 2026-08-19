@@ -57,6 +57,12 @@ TEAMS = [
         "tag": "穿戴裝置",
         "project": "",
     },
+    {
+        "id": "t8",
+        "name": "其他",
+        "tag": "",
+        "project": "",
+    },
 ]
 
 TEAM_LOOKUP = {t["id"]: t for t in TEAMS}

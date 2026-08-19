@@ -26,6 +26,8 @@ html, body {
 
 #app { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; }
 
+html { -webkit-text-size-adjust: 100%; }
+
 .view { display: none; width: 100%; }
 .view.active { display: flex; justify-content: center; animation: fadeIn .25s ease; }
 
@@ -52,12 +54,17 @@ p { margin: 0 0 10px; line-height: 1.5; }
 
 .field { display: block; margin-bottom: 14px; }
 .field span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
-.field input, .field textarea {
+.field input, .field select, .field textarea {
   width: 100%; padding: 10px 14px; border: 2px solid var(--line); border-radius: 10px;
-  font-size: 15px; font-family: inherit; color: var(--ink); background: var(--paper);
+  font-size: 16px; font-family: inherit; color: var(--ink); background: var(--paper);
+  -webkit-appearance: none; appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' stroke='%23647984' stroke-width='2' fill='none' fill-rule='evenodd'/></svg>");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
 }
 .field textarea { resize: vertical; min-height: 60px; }
-.field input:focus, .field textarea:focus { outline: none; border-color: var(--cyan); }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--cyan); }
 
 .error { color: var(--red); font-size: 14px; min-height: 18px; margin: 4px 0 0; }
 
@@ -78,6 +85,18 @@ p { margin: 0 0 10px; line-height: 1.5; }
 .question-block:last-child { border-bottom: none; }
 .question-label { font-size: 13px; font-weight: 700; color: var(--purple); margin-bottom: 6px; }
 .question-text { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+
+.quiz-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.quiz-tab {
+  width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--line);
+  background: #fff; color: var(--muted); font-weight: 700; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-family: inherit;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.quiz-tab:hover { border-color: var(--cyan); }
+.quiz-tab.answered { border-color: var(--green); background: var(--light-green); color: var(--green); }
+.quiz-tab.active { border-color: var(--blue); background: var(--blue); color: #fff; }
+.quiz-tab.active.answered { border-color: var(--blue); background: var(--blue); color: #fff; }
 
 .mc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .mc-opt {
@@ -134,4 +153,25 @@ p { margin: 0 0 10px; line-height: 1.5; }
 @media (max-width: 760px) {
   .mc-options { grid-template-columns: 1fr; }
   .overview-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  #app { padding: 16px 10px; }
+  .card { padding: 22px 18px; border-radius: 16px; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 19px; }
+  .role-buttons { flex-direction: column; }
+  .role-buttons .btn { width: 100%; }
+  .row-buttons { flex-direction: column; align-items: stretch; }
+  .row-buttons .btn { width: 100%; }
+  .row-buttons .muted { text-align: center; order: -1; }
+  .quiz-tab { width: 32px; height: 32px; font-size: 12px; }
+  .overview-cards { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .overview-card { padding: 14px; }
+  .overview-card .value { font-size: 20px; }
+  .qstat-card { padding: 16px; }
+  .bar-count { width: 66px; font-size: 12px; }
+  .dashboard-header { flex-direction: column; align-items: stretch; }
+  .dashboard-header .row-buttons { flex-direction: row; }
+  .dashboard-header .row-buttons .btn { width: auto; flex: 1; }
 }
