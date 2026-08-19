@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICOPE 暖身 QA v2</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div id="app">
+
+  <!-- LANDING -->
+  <section id="view-landing" class="view active">
+    <div class="card center">
+      <div class="eyebrow">SMART HEALTH × ICOPE</div>
+      <h1>ICOPE 暖身問答 v2</h1>
+      <p class="muted">請選擇你的身分登入</p>
+      <div class="role-buttons">
+        <button class="btn primary" id="btn-role-student">我是學生</button>
+        <button class="btn ghost" id="btn-role-teacher">我是老師</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENT: name entry -->
+  <section id="view-student-login" class="view">
+    <div class="card center">
+      <div class="eyebrow">學生登入</div>
+      <h2>開始作答前，請先留下你的名字</h2>
+      <label class="field">
+        <span>姓名 *</span>
+        <input type="text" id="input-name" maxlength="60" placeholder="請輸入姓名">
+      </label>
+      <label class="field">
+        <span>組別 *</span>
+        <select id="input-team">
+          <option value="" disabled selected>請選擇你的組別</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>代號（選填）</span>
+        <input type="text" id="input-code" maxlength="40" placeholder="例如：學號或自訂代號">
+      </label>
+      <p class="error" id="student-login-error"></p>
+      <div class="row-buttons">
+        <button class="btn ghost" id="btn-back-from-student-login">返回</button>
+        <button class="btn primary" id="btn-start-quiz">開始作答</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENT: Part 1 ungraded opinion-poll questions -->
+  <section id="view-part1" class="view">
+    <div class="card wide">
+      <div class="eyebrow">PART 1 · 想法投票（無標準答案）</div>
+      <h2>先分享你的想法</h2>
+      <div id="open-questions"></div>
+      <div class="row-buttons">
+        <span class="muted" id="part1-progress"></span>
+        <button class="btn primary" id="btn-to-part2">下一部分：選擇題 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENT: Part 2-3 MC questions (single + multi select, scored) -->
+  <section id="view-part2" class="view">
+    <div class="card wide">
+      <div class="eyebrow">PART 2-3 · 選擇題（會計分）</div>
+      <h2>請選出你認為最適合的答案</h2>
+      <div id="mc-questions"></div>
+      <p class="error" id="submit-error"></p>
+      <div class="row-buttons">
+        <button class="btn ghost" id="btn-back-to-part1">← 上一部分</button>
+        <button class="btn primary" id="btn-submit-quiz">送出作答</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENT: result -->
+  <section id="view-result" class="view">
+    <div class="card center">
+      <div class="eyebrow">完成！</div>
+      <h2>你的選擇題成績</h2>
+      <div class="score-big" id="result-score">-</div>
+      <p class="muted" id="result-duration"></p>
+      <div id="result-detail" class="result-detail"></div>
+      <div class="row-buttons">
+        <button class="btn primary" id="btn-back-landing">回到首頁</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEACHER: login -->
+  <section id="view-teacher-login" class="view">
+    <div class="card center">
+      <div class="eyebrow">老師登入</div>
+      <h2>請輸入登入密碼</h2>
+      <label class="field">
+        <span>密碼</span>
+        <input type="password" id="input-teacher-password" placeholder="請輸入密碼">
+      </label>
+      <p class="error" id="teacher-login-error"></p>
+      <div class="row-buttons">
+        <button class="btn ghost" id="btn-back-from-teacher-login">返回</button>
+        <button class="btn primary" id="btn-teacher-login">登入</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEACHER: dashboard -->
+  <section id="view-teacher-dashboard" class="view">
+    <div class="dashboard">
+      <div class="dashboard-header">
+        <div>
+          <div class="eyebrow">老師後台</div>
+          <h2>ICOPE 暖身問答 · 統計</h2>
+        </div>
+        <div class="row-buttons">
+          <button class="btn ghost" id="btn-refresh-stats">重新整理</button>
+          <button class="btn primary" id="btn-download-csv">下載 CSV</button>
+          <button class="btn ghost" id="btn-teacher-logout">登出</button>
+        </div>
+      </div>
+
+      <div class="overview-cards" id="overview-cards"></div>
+
+      <div id="question-stats"></div>
+    </div>
+  </section>
+
+</div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

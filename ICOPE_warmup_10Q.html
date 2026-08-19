@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICOPE 暖身提問 10 題｜報告前 Warm-up</title>
+<style>
+  :root {
+    --navy: #12304a;
+    --blue: #176b87;
+    --cyan: #38b6c8;
+    --green: #65b87a;
+    --light-green: #eaf7ee;
+    --orange: #f2a65a;
+    --yellow: #f6d365;
+    --red: #d95c5c;
+    --purple: #7357a8;
+    --white: #ffffff;
+    --paper: #f7fafb;
+    --ink: #18313f;
+    --muted: #647984;
+    --line: #dbe8ec;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; margin: 0; overflow: hidden;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
+    color: var(--ink); background: #081d2a;
+  }
+  .deck { width: 100%; height: 100%; position: relative; }
+  .slide {
+    display: none; position: absolute; inset: 0;
+    padding: 36px 80px 70px;
+    background:
+      radial-gradient(circle at 88% 12%, rgba(56,182,200,.14), transparent 24%),
+      linear-gradient(135deg, #ffffff 0%, #f4fafb 100%);
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; flex-direction: column; animation: fadeIn .28s ease; }
+  @keyframes fadeIn { from { opacity: .2; transform: translateX(12px);} to { opacity: 1; transform: translateX(0);} }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 700; letter-spacing: .12em;
+    color: var(--blue); margin-bottom: 6px; text-transform: uppercase;
+  }
+  .eyebrow::before { content: ""; width: 26px; height: 3px; background: var(--cyan); border-radius: 2px; }
+
+  h1 { font-size: clamp(32px, 3.6vw, 50px); line-height: 1.15; margin: 0 0 14px; color: var(--navy); font-weight: 800; }
+  h2 { font-size: clamp(22px, 2.6vw, 34px); line-height: 1.2; margin: 0 0 12px; color: var(--navy); font-weight: 800; }
+  p { font-size: clamp(16px, 1.4vw, 20px); line-height: 1.4; margin: 0 0 8px; color: var(--ink); }
+  .muted { color: var(--muted); }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .badge {
+    background: var(--navy); color: #fff; padding: 8px 18px; border-radius: 999px;
+    font-size: 15px; letter-spacing: .06em; margin-bottom: 22px; display: inline-block;
+  }
+  .cover ul { padding-left: 22px; margin: 18px 0 0; }
+  .cover li { font-size: clamp(17px,1.5vw,22px); margin: 8px 0; }
+
+  .qcount {
+    position: absolute; top: 36px; right: 80px; font-size: 14px; color: var(--muted);
+    font-weight: 700; letter-spacing: .04em;
+  }
+
+  .options {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;
+  }
+  .options.single-col { grid-template-columns: 1fr; }
+  .opt {
+    text-align: left; border: 2px solid var(--line); background: #fff; border-radius: 12px;
+    padding: 10px 16px; font-size: clamp(14px,1.2vw,17px); cursor: pointer; color: var(--ink);
+    display: flex; gap: 10px; align-items: flex-start; transition: border-color .15s, background .15s, transform .1s;
+  }
+  .opt:hover { border-color: var(--cyan); transform: translateY(-2px); }
+  .opt b { color: var(--blue); flex-shrink: 0; }
+  .opt.correct { border-color: var(--green); background: var(--light-green); }
+  .opt.wrong { border-color: var(--red); background: #fdecec; }
+  .opt.disabled { cursor: default; }
+  .opt.dim { opacity: .55; }
+
+  .explain {
+    margin-top: 10px; padding: 10px 16px; border-radius: 12px; background: #eef6f8;
+    border-left: 5px solid var(--cyan); font-size: clamp(13px,1.1vw,16px); display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--navy); }
+
+  .discuss-tag {
+    display: inline-block; background: var(--purple); color: #fff; font-size: 12px;
+    font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px; letter-spacing: .05em;
+  }
+
+  .closing { justify-content: center; }
+  .closing .big { font-size: clamp(30px,3.4vw,46px); font-weight: 800; color: var(--navy); margin-bottom: 14px; }
+
+  .nav {
+    position: absolute; bottom: 22px; left: 80px; right: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav button {
+    background: var(--navy); color: #fff; border: none; border-radius: 999px;
+    padding: 12px 28px; font-size: 16px; font-weight: 700; cursor: pointer;
+  }
+  .nav button:disabled { background: #b7c3c9; cursor: not-allowed; }
+  .progress { display: flex; gap: 6px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .dot.active { background: var(--cyan); }
+  .dot.done { background: var(--blue); }
+
+  .hint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <section class="slide active cover">
+    <div class="badge">SMART HEALTH × ICOPE</div>
+    <div class="eyebrow">WARM-UP · 報告前暖身</div>
+    <h1>ICOPE 暖身提問 10 題</h1>
+    <p class="muted">在正式報告前，先一起想一想這些問題。有些有標準答案，有些沒有——重點是引發討論與好奇心。</p>
+    <ul>
+      <li>共 10 題，每題可點選選項看看你的猜測對不對</li>
+      <li>部分題目是開放式討論題，沒有標準答案</li>
+      <li>用鍵盤 ← → 或下方按鈕切換題目</li>
+    </ul>
+  </section>
+
+  <!-- Q1 -->
+  <section class="slide">
+    <div class="qcount">Q1 / 10</div>
+    <div class="eyebrow">全球高齡化</div>
+    <h2>全球人口老化速度最快的地區是？</h2>
+    <div class="options">
+      <div class="opt" data-correct="false"><b>A</b> 非洲</div>
+      <div class="opt" data-correct="true"><b>B</b> 亞太地區</div>
+      <div class="opt" data-correct="false"><b>C</b> 歐洲</div>
+      <div class="opt" data-correct="false"><b>D</b> 拉丁美洲</div>
+    </div>
+    <div class="explain"><b>解析：</b>亞太地區（含台灣）是全球高齡化速度最快的區域之一，許多國家將在短時間內從「高齡化社會」邁入「超高齡社會」。</div>
+  </section>
+
+  <!-- Q2 discuss -->
+  <section class="slide">
+    <div class="qcount">Q2 / 10</div>
+    <div class="discuss-tag">討論題 · 無標準答案</div>
+    <div class="eyebrow">定義高齡</div>
+    <h2>你覺得幾歲開始算是「高齡」？</h2>
+    <div class="options single-col">
+      <div class="opt" data-correct="true"><b>A</b> 55 歲</div>
+      <div class="opt" data-correct="true"><b>B</b> 60 歲</div>
+      <div class="opt" data-correct="true"><b>C</b> 65 歲</div>
+      <div class="opt" data-correct="true"><b>D</b> 70 歲，甚至更晚</div>
+    </div>
+    <div class="explain"><b>想一想：</b>WHO 與台灣法規多以 65 歲作為高齡門檻，但「老化」其實是漸進且因人而異的過程，不是切一刀就決定的——這正是 ICOPE 強調「內在能力」而非單看年齡的原因。</div>
+  </section>
+
+  <!-- Q3 -->
+  <section class="slide">
+    <div class="qcount">Q3 / 10</div>
+    <div class="eyebrow">ICOPE 起源</div>
+    <h2>ICOPE 是哪個國際組織提出的整合式照護框架？</h2>
+    <div class="options">
+      <div class="opt" data-correct="true"><b>A</b> WHO 世界衛生組織</div>
+      <div class="opt" data-correct="false"><b>B</b> 聯合國 UN</div>
+      <div class="opt" data-correct="false"><b>C</b> UNICEF</div>
+      <div class="opt" data-correct="false"><b>D</b> 紅十字會</div>
+    </div>
+    <div class="explain"><b>解析：</b>ICOPE（Integrated Care for Older People）由 WHO 於 2019 年提出，是全球推動健康老化的重要照護框架。</div>
+  </section>
+
+  <!-- Q4 -->
+  <section class="slide">
+    <div class="qcount">Q4 / 10</div>
+    <div class="eyebrow">六大內在能力</div>
+    <h2>ICOPE 強調的六大內在能力，不包含以下哪一項？</h2>
+    <div class="options">
+      <div class="opt" data-correct="false"><b>A</b> 認知力</div>
+      <div class="opt" data-correct="false"><b>B</b> 行動力</div>
+      <div class="opt" data-correct="true"><b>C</b> 財務能力</div>
+      <div class="opt" data-correct="false"><b>D</b> 心理健康</div>
+    </div>
+    <div class="explain"><b>解析：</b>ICOPE 六力為：認知力、行動力、營養與活力、視力、聽力、心理健康——皆與「身心功能」有關，並不包含財務能力。</div>
+  </section>
+
+  <!-- Q5 -->
+  <section class="slide">
+    <div class="qcount">Q5 / 10</div>
+    <div class="eyebrow">核心精神</div>
+    <h2>「健康老化」（Healthy Ageing）的核心精神是？</h2>
+    <div class="options single-col">
+      <div class="opt" data-correct="false"><b>A</b> 讓壽命越長越好</div>
+      <div class="opt" data-correct="true"><b>B</b> 維持內在能力，持續發揮功能、參與生活</div>
+      <div class="opt" data-correct="false"><b>C</b> 完全沒有任何疾病</div>
+      <div class="opt" data-correct="false"><b>D</b> 完全依賴家人或機構照顧</div>
+    </div>
+    <div class="explain"><b>解析：</b>健康老化重點不在「活得多久」，而在「活得好不好」——能否維持功能發揮，持續做自己重視的事。</div>
+  </section>
+
+  <!-- Q6 -->
+  <section class="slide">
+    <div class="qcount">Q6 / 10</div>
+    <div class="eyebrow">篩檢 vs 診斷</div>
+    <h2>篩檢、評估、診斷三者的差異，何者正確？</h2>
+    <div class="options single-col">
+      <div class="opt" data-correct="false"><b>A</b> 三者其實是同一件事</div>
+      <div class="opt" data-correct="true"><b>B</b> 篩檢用來找出風險族群，確診仍需醫療診斷</div>
+      <div class="opt" data-correct="false"><b>C</b> 診斷比篩檢簡單、更快</div>
+      <div class="opt" data-correct="false"><b>D</b> 評估等於直接治療</div>
+    </div>
+    <div class="explain"><b>解析：</b>篩檢（Screening）找出可能有風險的人 → 評估（Assessment）進一步了解狀況 → 診斷（Diagnosis）由專業人員確認問題並擬定處置，三者層層遞進、不能互相取代。</div>
+  </section>
+
+  <!-- Q7 -->
+  <section class="slide">
+    <div class="qcount">Q7 / 10</div>
+    <div class="eyebrow">智慧科技應用</div>
+    <h2>哪種科技最適合「連續」觀察長者的日常活力變化？</h2>
+    <div class="options">
+      <div class="opt" data-correct="false"><b>A</b> 一次性抽血檢查</div>
+      <div class="opt" data-correct="true"><b>B</b> 穿戴式裝置</div>
+      <div class="opt" data-correct="false"><b>C</b> 紙本問卷</div>
+      <div class="opt" data-correct="false"><b>D</b> X 光檢查</div>
+    </div>
+    <div class="explain"><b>解析：</b>穿戴裝置可以長期、連續地收集步態、心率、睡眠等資料，有助於及早發現趨勢性的變化，而不只是單一時間點的快照。</div>
+  </section>
+
+  <!-- Q8 -->
+  <section class="slide">
+    <div class="qcount">Q8 / 10</div>
+    <div class="eyebrow">資料倫理</div>
+    <h2>智慧健康資料應用最需要留意的倫理議題是？</h2>
+    <div class="options">
+      <div class="opt" data-correct="false"><b>A</b> 檔案大小</div>
+      <div class="opt" data-correct="true"><b>B</b> 隱私與資料安全</div>
+      <div class="opt" data-correct="false"><b>C</b> 網路速度</div>
+      <div class="opt" data-correct="false"><b>D</b> 裝置電池續航力</div>
+    </div>
+    <div class="explain"><b>解析：</b>健康資料高度敏感，如何取得同意、妥善保護與合理使用資料，是智慧健康服務設計時不能忽略的關鍵課題。</div>
+  </section>
+
+  <!-- Q9 -->
+  <section class="slide">
+    <div class="qcount">Q9 / 10</div>
+    <div class="eyebrow">照護路徑</div>
+    <h2>發現長者能力衰退後，ICOPE 照護路徑的下一步通常是？</h2>
+    <div class="options single-col">
+      <div class="opt" data-correct="false"><b>A</b> 直接安排住院</div>
+      <div class="opt" data-correct="true"><b>B</b> 進一步評估，並擬定個別化照護計畫</div>
+      <div class="opt" data-correct="false"><b>C</b> 忽略即可，等惡化再說</div>
+      <div class="opt" data-correct="false"><b>D</b> 立即開立藥物</div>
+    </div>
+    <div class="explain"><b>解析：</b>從篩檢發現風險後，會進入更完整的評估，再依結果擬定個人化的照護與追蹤計畫——強調早期介入而非等到重症才處理。</div>
+  </section>
+
+  <!-- Q10 discuss -->
+  <section class="slide">
+    <div class="qcount">Q10 / 10</div>
+    <div class="discuss-tag">討論題 · 無標準答案</div>
+    <div class="eyebrow">動手想一想</div>
+    <h2>如果要為長者設計一款智慧照護服務，你最優先想解決的問題是？</h2>
+    <div class="options single-col">
+      <div class="opt" data-correct="true"><b>A</b> 用藥提醒與追蹤</div>
+      <div class="opt" data-correct="true"><b>B</b> 跌倒偵測與預防</div>
+      <div class="opt" data-correct="true"><b>C</b> 社交陪伴、降低孤獨感</div>
+      <div class="opt" data-correct="true"><b>D</b> 認知訓練與早期發現失智風險</div>
+    </div>
+    <div class="explain"><b>想一想：</b>這題沒有標準答案！可以和旁邊的同學討論一下你的選擇與理由，這也會是接下來報告內容的暖身思考方向。</div>
+  </section>
+
+  <section class="slide closing">
+    <div class="eyebrow">READY?</div>
+    <div class="big">暖身完成，準備好了嗎？</div>
+    <p class="muted">接下來，我們正式進入 ICOPE 與智慧大健康的完整介紹。</p>
+  </section>
+
+  <div class="nav">
+    <button id="prevBtn">← 上一題</button>
+    <div class="progress" id="progress"></div>
+    <button id="nextBtn">下一題 →</button>
+  </div>
+  <div class="hint">按 ← → 鍵切換題目，點選選項查看解析</div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const progressEl = document.getElementById("progress");
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    progressEl.appendChild(dot);
+  });
+  const dots = Array.from(progressEl.children);
+
+  function showSlide(index) {
+    slides[current].classList.remove("active");
+    current = Math.max(0, Math.min(index, slides.length - 1));
+    slides[current].classList.add("active");
+    dots.forEach((d, i) => {
+      d.classList.toggle("active", i === current);
+      d.classList.toggle("done", i < current);
+    });
+    document.getElementById("prevBtn").disabled = current === 0;
+    document.getElementById("nextBtn").disabled = current === slides.length - 1;
+  }
+
+  function nextSlide() { showSlide(current + 1); }
+  function previousSlide() { showSlide(current - 1); }
+
+  document.getElementById("nextBtn").addEventListener("click", nextSlide);
+  document.getElementById("prevBtn").addEventListener("click", previousSlide);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") nextSlide();
+    if (e.key === "ArrowLeft") previousSlide();
+  });
+
+  // Click-to-reveal answer logic for each question slide
+  slides.forEach((slide) => {
+    const opts = Array.from(slide.querySelectorAll(".opt"));
+    if (opts.length === 0) return;
+    const explain = slide.querySelector(".explain");
+    opts.forEach((opt) => {
+      opt.addEventListener("click", () => {
+        if (opt.classList.contains("disabled")) return;
+        opts.forEach((o) => {
+          o.classList.add("disabled");
+          if (o.dataset.correct === "true") {
+            o.classList.add("correct");
+          } else if (o === opt) {
+            o.classList.add("wrong");
+          } else {
+            o.classList.add("dim");
+          }
+        });
+        if (explain) explain.classList.add("show");
+      });
+    });
+  });
+
+  showSlide(0);
+</script>
+</body>
+</html>
