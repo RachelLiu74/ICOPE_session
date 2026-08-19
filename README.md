@@ -52,4 +52,4 @@ web: gunicorn app:app --workers 1 --threads 4 --bind 0.0.0.0:$PORT
 
 ## 老師登入密碼
 
-預設密碼為 `17383`，正式對外使用前請至 [app.py](app.py) 修改 `TEACHER_PASSWORD`。
+預設密碼為 `分機號碼`，正式對外使用前請至 [app.py](app.py) 修改 `TEACHER_PASSWORD`。
