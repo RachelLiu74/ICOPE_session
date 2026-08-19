@@ -50,6 +50,20 @@ web: gunicorn app:app --workers 1 --threads 4 --bind 0.0.0.0:$PORT
 
 **注意**：免費方案通常使用暫時性檔案系統，服務重啟或閒置休眠後 SQLite 資料庫內容可能會遺失，僅適合單堂課程的臨時使用，如需長期保存資料建議改用外部資料庫服務。
 
+## 用 GitHub Codespaces 快速對外測試
+
+專案已附上 `.devcontainer/devcontainer.json`，可直接在 GitHub 上開一個雲端開發環境測試，不需要另外註冊部署平台帳號：
+
+1. 到 GitHub 上的 repo 頁面，點選綠色 **Code** 按鈕 → **Codespaces** 分頁 → **Create codespace on main**。
+2. 等待環境建立完成（會自動執行 `pip install -r requirements.txt`），接著會自動在背景啟動 `python app.py`（監聽埠 `5057`）。
+3. Codespace 會自動偵測到埠 `5057` 並跳出預覽視窗；下方 **PORTS** 分頁可以看到該埠已設定為 **Public**，複製該網址即可分享給任何人在瀏覽器開啟（手機／電腦皆可）。
+4. 若要重新啟動伺服器（例如改了程式碼），在 Codespace 的終端機執行：
+   ```bash
+   pkill -f "python app.py"; python app.py
+   ```
+
+**注意**：Codespaces 免費額度有限（依 GitHub 帳號方案而定），且每次重新建立 Codespace 網址都會改變，資料庫也只存在該 Codespace 內、刪除後就會消失，僅適合臨時測試，正式對外長期使用建議改用 Render／Railway。
+
 ## 老師登入密碼
 
 預設密碼為 `分機號碼`，正式對外使用前請至 [app.py](app.py) 修改 `TEACHER_PASSWORD`。
