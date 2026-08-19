@@ -432,10 +432,16 @@ def teacher_download_csv():
     )
 
 
+# Initialize the database as soon as the module is imported so that
+# production WSGI servers (e.g. gunicorn on Render/Railway), which import
+# `app` directly instead of running this file, still get the tables created.
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     # host=0.0.0.0 so students on the same classroom network can connect
     # via this machine's LAN IP; debug is kept off for security.
-    # Port 5057 is used because 5000 is already occupied by an unrelated
-    # local service on this machine.
-    app.run(host="0.0.0.0", port=5057, debug=False)
+    # PORT env var is honored for cloud hosts (Render/Railway); defaults to
+    # 5057 locally because 5000 is already occupied by an unrelated service
+    # on this machine.
+    port = int(os.environ.get("PORT", 5057))
+    app.run(host="0.0.0.0", port=port, debug=False)
