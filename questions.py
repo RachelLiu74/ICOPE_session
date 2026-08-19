@@ -4,10 +4,10 @@
 Question types:
 - "mc_ungraded": multiple choice, single-select, NO correct answer.
                  Used purely as a warm-up opinion poll (Q1-5).
-- "mc_single":   multiple choice, single-select, scored (Q6-8).
+- "mc_single":   multiple choice, single-select, scored (Q6-7).
 - "mc_multi":    multiple choice, multi-select (checkboxes), scored.
                  Correct if the student's selected set exactly matches
-                 the "correct" set (Q9-10).
+                 the "correct" set (Q8-9).
 
 Correct answers are only ever read on the server; the public
 `/api/questions` endpoint strips the "correct" field before sending
@@ -135,7 +135,7 @@ UNGRADED_QUESTIONS = [
 
 
 # ---------------------------------------------------------------------
-# Q6-8: single-choice, scored
+# Q6-7: single-choice, scored
 # ---------------------------------------------------------------------
 SINGLE_QUESTIONS = [
     {
@@ -156,20 +156,6 @@ SINGLE_QUESTIONS = [
         "id": "q7",
         "type": "mc_single",
         "section": "PART 2 · 選擇題（單選，會計分）",
-        "text": "WHO 提出 ICOPE 框架的主要目的是？",
-        "options": {
-            "A": "治療癌症的臨床指引",
-            "B": "以社區為基礎，提供長者整合式照護",
-            "C": "疫苗接種排程",
-            "D": "兒童發展篩檢工具",
-        },
-        "correct": "B",
-        "explain": "ICOPE 目的是在社區與基層場域，及早發現並整合照護長者的內在能力衰退。",
-    },
-    {
-        "id": "q8",
-        "type": "mc_single",
-        "section": "PART 2 · 選擇題（單選，會計分）",
         "text": "下列何者最符合「以人為中心」的照護精神？",
         "options": {
             "A": "只依檢驗數據做決定",
@@ -184,11 +170,11 @@ SINGLE_QUESTIONS = [
 
 
 # ---------------------------------------------------------------------
-# Q9-10: multi-select, scored (exact set match required)
+# Q8-9: multi-select, scored (exact set match required)
 # ---------------------------------------------------------------------
 MULTI_QUESTIONS = [
     {
-        "id": "q9",
+        "id": "q8",
         "type": "mc_multi",
         "section": "PART 3 · 複選題（會計分）",
         "text": "ICOPE 六大內在能力包含下列哪些？（複選，請選出全部正確選項）",
@@ -206,7 +192,7 @@ MULTI_QUESTIONS = [
         "explain": "ICOPE 六力為：認知力、行動力、營養與活力、視力、聽力、心理健康；財務能力與睡眠品質不在六力之列。",
     },
     {
-        "id": "q10",
+        "id": "q9",
         "type": "mc_multi",
         "section": "PART 3 · 複選題（會計分）",
         "text": "下列哪些是 ICOPE 照護路徑中會出現的步驟？（複選，請選出全部正確選項）",
