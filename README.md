@@ -64,6 +64,23 @@ web: gunicorn app:app --workers 1 --threads 4 --bind 0.0.0.0:$PORT
 
 **注意**：Codespaces 免費額度有限（依 GitHub 帳號方案而定），且每次重新建立 Codespace 網址都會改變，資料庫也只存在該 Codespace 內、刪除後就會消失，僅適合臨時測試，正式對外長期使用建議改用 Render／Railway。
 
+## 用 GitHub Pages 部署靜態版（無登入/無統計，僅簡報用）
+
+GitHub Pages 只能放靜態網頁，無法執行 Flask 後端，因此這裡部署的是**不需要伺服器**的獨立版本 [ICOPE_warmup_10Q.html](ICOPE_warmup_10Q.html)（已複製一份到 `docs/index.html`），適合單純簡報 / 課堂投影片使用，沒有學生登入、老師統計、CSV 下載等功能。
+
+啟用步驟（只需設定一次）：
+
+1. 到 GitHub 上的 repo 頁面 → **Settings** → 左側選單 **Pages**。
+2. **Build and deployment** → **Source** 選擇 **Deploy from a branch**。
+3. **Branch** 選擇 `main`，資料夾選擇 **/docs**，按 **Save**。
+4. 等待約 1 分鐘，頁面會顯示發佈完成的網址，格式類似：
+   ```
+   https://rachelliu74.github.io/ICOPE_session/
+   ```
+5. 之後若要更新內容，只要修改 `docs/index.html` 並 push 到 `main`，GitHub Pages 會自動重新部署。
+
+若要對外提供完整互動（學生登入、計分、老師統計），請改用上面的 Render 部署或 GitHub Codespaces。
+
 ## 老師登入密碼
 
 預設密碼為 `分機號碼`，正式對外使用前請至 [app.py](app.py) 修改 `TEACHER_PASSWORD`。
