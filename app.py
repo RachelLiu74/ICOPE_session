@@ -8,9 +8,9 @@ aggregated statistics and download them as CSV.
 v3 changes:
 - Student must pick their team from a required dropdown (student code
   is optional free text).
-- Q1-5 are ungraded multiple-choice opinion polls.
-- Q6-7 are single-choice scored questions.
-- Q8-9 are multi-select (checkbox) scored questions, correct only when
+- Q1-6 are ungraded multiple-choice opinion polls.
+- Q7-8 are single-choice scored questions.
+- Q9-10 are multi-select (checkbox) scored questions, correct only when
   the selected set exactly matches the answer key.
 
 Run:

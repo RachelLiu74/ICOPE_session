@@ -3,11 +3,11 @@
 
 Question types:
 - "mc_ungraded": multiple choice, single-select, NO correct answer.
-                 Used purely as a warm-up opinion poll (Q1-5).
-- "mc_single":   multiple choice, single-select, scored (Q6-7).
+                 Used purely as a warm-up opinion poll (Q1-6).
+- "mc_single":   multiple choice, single-select, scored (Q7-8).
 - "mc_multi":    multiple choice, multi-select (checkboxes), scored.
                  Correct if the student's selected set exactly matches
-                 the "correct" set (Q8-9).
+                 the "correct" set (Q9-10).
 
 Correct answers are only ever read on the server; the public
 `/api/questions` endpoint strips the "correct" field before sending
@@ -131,15 +131,27 @@ UNGRADED_QUESTIONS = [
             "D": "資料量大",
         },
     },
+    {
+        "id": "q6",
+        "type": "mc_ungraded",
+        "section": "PART 1 · 想法投票（無標準答案）",
+        "text": "你認為哪一項最能代表「健康老化」？",
+        "options": {
+            "A": "🧠 記憶力好",
+            "B": "💪 肌力充足",
+            "C": "❤️ 社會參與",
+            "D": "😊 保持好心情",
+        },
+    },
 ]
 
 
 # ---------------------------------------------------------------------
-# Q6-7: single-choice, scored
+# Q7-8: single-choice, scored
 # ---------------------------------------------------------------------
 SINGLE_QUESTIONS = [
     {
-        "id": "q6",
+        "id": "q7",
         "type": "mc_single",
         "section": "PART 2 · 選擇題（單選，會計分）",
         "text": "ICOPE 六力中，哪一項與「肌少症、跌倒風險」最直接相關？",
@@ -153,7 +165,7 @@ SINGLE_QUESTIONS = [
         "explain": "行動力（Locomotion）涵蓋肌力、平衡與步態，與肌少症、跌倒風險直接相關。",
     },
     {
-        "id": "q7",
+        "id": "q8",
         "type": "mc_single",
         "section": "PART 2 · 選擇題（單選，會計分）",
         "text": "下列何者最符合「以人為中心」的照護精神？",
@@ -170,11 +182,11 @@ SINGLE_QUESTIONS = [
 
 
 # ---------------------------------------------------------------------
-# Q8-9: multi-select, scored (exact set match required)
+# Q9-10: multi-select, scored (exact set match required)
 # ---------------------------------------------------------------------
 MULTI_QUESTIONS = [
     {
-        "id": "q8",
+        "id": "q9",
         "type": "mc_multi",
         "section": "PART 3 · 複選題（會計分）",
         "text": "ICOPE 六大內在能力包含下列哪些？（複選，請選出全部正確選項）",
@@ -192,7 +204,7 @@ MULTI_QUESTIONS = [
         "explain": "ICOPE 六力為：認知力、行動力、營養與活力、視力、聽力、心理健康；財務能力與睡眠品質不在六力之列。",
     },
     {
-        "id": "q9",
+        "id": "q10",
         "type": "mc_multi",
         "section": "PART 3 · 複選題（會計分）",
         "text": "下列哪些是 ICOPE 照護路徑中會出現的步驟？（複選，請選出全部正確選項）",

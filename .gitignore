@@ -4,3 +4,4 @@ icope_qa.db
 *.csv
 .venv/
 venv/
+repo.md
